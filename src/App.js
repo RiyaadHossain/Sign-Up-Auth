@@ -2,8 +2,11 @@
 import './App.css';
 import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import app from './Firebase.init';
+import { useState } from 'react';
 
 function App() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
@@ -19,10 +22,24 @@ function App() {
     })
   }
 
+  const onEmailBlur = event => {
+    setEmail(event.target.value);
+  }
+
+  const onPasswordBlur = event => {
+    setPassword(event.target.value);
+  }
 
 
-  const emailSingUp = () => {
-    createUserWithEmailAndPassword(auth)
+  const emailSingUp = (e) => {
+    e.preventDefault()
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(result => {
+      console.log(result.user);
+      })
+      .catch(error => {
+      console.log(error.message);
+    })
   }
  
   return (
@@ -47,7 +64,7 @@ function App() {
           <label htmlFor="password">Password</label>
           <div className="input-wrapper">
             <input
-              
+              onBlur={onPasswordBlur}
               type="password"
               name="password"
               id="password"
