@@ -1,17 +1,41 @@
 
 import './App.css';
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import app from './Firebase.init';
 
 function App() {
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // Google Sing In 
+  const googleLogIn = () => {
+    signInWithPopup(auth, provider)
+      .then(userInfo => {
+        console.log(userInfo.user);
+      // const user = userInfo.user
+      })
+      .catch(mistake => {
+      console.log(mistake.message);
+    })
+  }
+
+
+
+  const emailSingUp = () => {
+    createUserWithEmailAndPassword(auth)
+  }
+ 
   return (
     <div className="auth-form-container ">
     <div className="auth-form">
       <h1>Sign Up</h1>
-      <form >
+      <form onSubmit={emailSingUp}>
         <div className="input-field">
           <label htmlFor="email">Email</label>
           <div className="input-wrapper">
             <input
               
+              onBlur={onEmailBlur}
               type="email"
               name="email"
               id="email"
@@ -57,7 +81,7 @@ function App() {
         <div className="line-right" />
       </div>
       <div className="input-wrapper">
-        <button  className="google-auth">
+        <button onClick={googleLogIn}  className="google-auth">
           
           <p> Continue with Google </p>
         </button>
